@@ -1,0 +1,29 @@
+import cv2
+
+cap = cv2.VideoCapture(0)
+
+face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+
+
+# Check if the webcam is opened correctly
+if not cap.isOpened():
+    raise IOError("Cannot open webcam")
+
+while True:
+    ret, frame = cap.read()
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    
+    faces = face_cascade.detectMultiScale(gray ,1.1, 5)
+   
+    for rect in faces:
+        (x, y , w, h) = rect
+        frame = cv2.rectangle(frame,(x, y),(x+w, y+h),( 0, 255, 0),2)
+    frame = cv2.resize(frame, None, fx=0.9, fy=0.9, interpolation=cv2.INTER_AREA)
+    cv2.imshow('Input', frame)
+
+    c = cv2.waitKey(1)
+    if c == 27: # Esc key to exit
+        break
+
+cap.release()
+cv2.destroyAllWindows()
